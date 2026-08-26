@@ -1,4 +1,8 @@
 .clj-kondo/
 .cpcache/
 .lsp/
-data
+node_modules/
+.nrepl-port
+.rebel_readline_history
+data/
+target/

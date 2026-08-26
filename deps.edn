@@ -3,4 +3,20 @@
  {org.clojure/clojure {:mvn/version "1.12.5"}
   ring/ring-jetty-adapter {:mvn/version "1.12.1"}
   metosin/reitit {:mvn/version "0.11.0-rc1"}
-  cheshire/cheshire {:mvn/version "6.2.0"}}}
+  cheshire/cheshire {:mvn/version "6.2.0"}
+  hiccup/hiccup {:mvn/version "2.0.0"}
+  reagent/reagent {:mvn/version "2.0.1"}}
+ :aliases
+ {:build {:main-opts  ["-m" "caicat.webui.build"]}
+  :serve {:main-opts  ["-m" "caicat.server.main"]
+          :extra-deps
+          {cljfmt/cljfmt {:mvn/version "0.5.7"}
+           nrepl/nrepl {:mvn/version "1.7.0"}
+           com.bhauman/rebel-readline {:mvn/version "0.1.4"}
+           com.cemerick/piggieback {:mvn/version "0.2.2"}}}
+  :nrepl {:extra-deps {com.bhauman/rebel-readline-nrepl {:mvn/version "0.1.11"}}
+          :exec-fn rebel-readline.nrepl/connect
+          :exec-args {:background-print false}
+          :main-opts ["-m" "rebel-readline.nrepl.main"]
+          :jvm-opts ["--enable-native-access=ALL-UNNAMED"]}}}
+
