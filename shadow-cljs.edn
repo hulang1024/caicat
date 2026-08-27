@@ -1,11 +1,10 @@
-;; shadow-cljs configuration
-{:source-paths
- ["src/dev"
-  "src/main"
-  "src/test"]
-
- :dependencies
- []
-
+{:deps true
+ :dev-http {9000 ["public"]}
  :builds
- {}}
+ {:app {:target :browser
+        :output-dir "public/js"
+        :asset-path "/js"
+        :compiler-options {:optimizations :advanced}
+        :runtime :browser
+        :modules {:main {:init-fn caicat.webui.main/init}}}}
+ :nrepl {:port 7888}}

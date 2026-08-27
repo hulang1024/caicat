@@ -2,6 +2,8 @@
 .cpcache/
 .lsp/
 node_modules/
+.shadow-cljs
+public/
 .nrepl-port
 .rebel_readline_history
 data/

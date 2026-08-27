@@ -1,7 +1,5 @@
 (ns caicat.server.main
-  (:require [caicat.webui.page :refer [app-page]]
-            [cheshire.core :as json]
-            [clojure.java.io :as io]
+  (:require [caicat.server.service :refer [save]]
             [muuntaja.core :as m]
             [nrepl.server]
             [reitit.coercion.malli]
@@ -14,28 +12,9 @@
             [reitit.ring.middleware.parameters :as parameters]
             [ring.adapter.jetty :as jetty]))
 
-(defn- save [{{{:keys [name phone weixin qq idcard-a idcard-b face-photo]} :multipart} :parameters}]
-  (let [dir (io/file "data" "member" phone)]
-    (.mkdirs dir)
-    ; 写图片
-    (doseq [[target-name {:keys [filename tempfile]}] {"idcard-a" idcard-a
-                                                       "idcard-b" idcard-b
-                                                       "face-photo" face-photo}]
-      (let [ext (subs filename (-> filename (.lastIndexOf ".")))]
-        (io/copy tempfile (io/file dir (str target-name ext)))))
-    ; 写json
-    (let [info {:name name :phone phone :weixin weixin :qq qq}
-          jsonf (io/file dir "info.json")]
-      (with-open [writer (io/writer jsonf)]
-        (json/generate-stream info writer))))
-  {:status 200 :body {:message "OK"}})
-
 (def routes
   [["/"
-    {:get (fn [_]
-            {:status 200
-             :headers {"Content-Type" "text/html"}
-             :body (str (app-page))})}]
+    (ring/create-resource-handler {:root "/" :path "public"})]
    ["/api"
     ["/ping"
      {:get (fn [_] {:status 200 :body "pong"})}]
