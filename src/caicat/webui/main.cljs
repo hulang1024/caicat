@@ -28,7 +28,7 @@
    :face-photo nil
    :submitting? false
    :errors #{}
-   :success? true})
+   :success? nil})
 
 (defn ^:async submit-form [data]
   (let [form-data (js/FormData.)]
@@ -50,9 +50,9 @@
           (swap! form assoc :submitting? true :success? nil)
           (try
             (when-let [res (await (submit-form form-data))]
-              (swap! form assoc :success? (:ok res))
               (when (:ok res)
-                (reset! form (initial-form))))
+                (reset! form (initial-form)))
+              (swap! form assoc :success? (:ok res)))
             (finally
               (swap! form assoc :submitting? false))))
         (let [errs (m/explain schema/Person form-data)

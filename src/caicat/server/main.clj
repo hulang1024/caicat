@@ -36,11 +36,11 @@
             :middleware [parameters/parameters-middleware
                          muuntaja/format-middleware
                          (exception/create-exception-middleware
-                          (merge
-                            exception/default-handlers
-                            {::exception/wrap (fn [handler e request]
-                                                (log/error e "Request errored" {:uri (:uri request)})
-                                                (handler e request))}))
+                           (merge
+                             exception/default-handlers
+                             {::exception/wrap (fn [handler e request]
+                                                 (log/error e "Request errored" {:uri (:uri request)})
+                                                 (handler e request))}))
                          muuntaja/format-request-middleware
                          coercion/coerce-response-middleware
                          coercion/coerce-request-middleware

@@ -14,6 +14,7 @@
      [:div#app]
      [:script {:src "js/main.js"}]]))
 
-(defn -main []
-  (b/process {:command-args ["npx" "shadow-cljs" "compile" "app"]})
-  (spit "resources/public/index.html" (str (app-page))))
+(defn -main [& _]
+  (spit "resources/public/index.html" (str (app-page)))
+  (b/process {:command-args ["mkdir" "-p" "resources/public/css"]})
+  (b/process {:command-args ["cp" "node_modules/@mantine/core/styles.css" "resources/public/css/mantine-styles.css"]}))
