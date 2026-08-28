@@ -8,3 +8,4 @@ public/
 .rebel_readline_history
 data/
 target/
+logs/

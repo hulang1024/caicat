@@ -16,4 +16,4 @@
 
 (defn -main []
   (b/process {:command-args ["npx" "shadow-cljs" "compile" "app"]})
-  (spit "public/index.html" (str (app-page))))
+  (spit "resources/public/index.html" (str (app-page))))

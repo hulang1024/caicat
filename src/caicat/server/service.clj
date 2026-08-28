@@ -3,19 +3,21 @@
     [cheshire.core :as json]
     [clojure.java.io :as io]))
 
-(defn save [{{{:keys [name phone weixin qq idcard-a idcard-b face-photo]} :multipart} :parameters}]
-  (let [dir (io/file "data" "member" phone)]
+(defn save-person [{{{:keys [role phone] :as person} :multipart} :parameters :as req}]
+  (tap> (get-in req [:parameters :multipart]))
+  (let [dir (io/file "data" role phone)]
     (.mkdirs dir)
     ; 写图片
-    (doseq [[target-name {:keys [filename tempfile]}] {"idcard-a" idcard-a
-                                                       "idcard-b" idcard-b
-                                                       "face-photo" face-photo}]
-      (let [ext (subs filename (-> filename (.lastIndexOf ".")))]
-        (io/copy tempfile (io/file dir (str target-name ext)))))
+    (when (= role "member")
+      (doseq [[target-name
+               {:keys [filename tempfile]}] {"idcard-a" (:idcard-a person)
+                                             "face-photo" (:face-photo person)}]
+        (let [ext (subs filename (-> filename (.lastIndexOf ".")))]
+          (io/copy tempfile (io/file dir (str target-name ext))))))
     ; 写json
-    (let [info {:name name :phone phone :weixin weixin :qq qq}
+    (let [info (dissoc person :idcard-a :face-photo)
           jsonf (io/file dir "info.json")]
       (with-open [writer (io/writer jsonf)]
         (json/generate-stream info writer))))
-  {:status 200 :body {:message "OK"}})
+  {:status 200 :body {:ok true}})
 

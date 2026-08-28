@@ -1,8 +1,8 @@
 {:deps true
- :dev-http {9000 ["public"]}
+ :dev-http {9000 ["resources/public"]}
  :builds
  {:app {:target :browser
-        :output-dir "public/js"
+        :output-dir "resources/public/js"
         :asset-path "/js"
         :compiler-options {:optimizations :advanced}
         :runtime :browser
