@@ -1,9 +1,9 @@
 (ns caicat.webui.main
   (:require
     ; ["@mantine/core/styles.css"]
-    ["@mantine/core" :refer [AspectRatio Button Center createTheme FileInput
+    ["@mantine/core" :refer [AspectRatio Button Center Group createTheme FileInput
                              Image MantineProvider Notification Select Space
-                             Stack TextInput Title]]
+                             Stack Input TextInput Title]]
     [ajax.core]
     [caicat.shared.schema :as schema]
     [caicat.webui.util :refer [parse-search request]]
@@ -50,8 +50,6 @@
           (swap! form assoc :submitting? true :success? nil)
           (try
             (when-let [res (await (submit-form form-data))]
-              (when (:ok res)
-                (reset! form (initial-form)))
               (swap! form assoc :success? (:ok res)))
             (finally
               (swap! form assoc :submitting? false))))
@@ -63,7 +61,7 @@
 
 (def theme
   (createTheme
-    (clj->js {:components {:Input {:defaultProps {:size "md"}}
+    (clj->js {:components {:Input {:defaultProps {:variant "filled" :size "md"}}
                            :Button {:defaultProps {:size "lg"}}}})))
 
 (defn upload-photo [{:keys [label state key submitting?]}]
@@ -107,8 +105,11 @@
              :face-photo nil))
     (fn []
       (let [{:keys [role admin-nickname name phone weixin qq shop-url idcard submitting? errors success?]} @form]
-        [:> MantineProvider {:theme theme}
-         [:div {:style {:min-height "100vh" :padding "20px" :background "#fafafa"}}
+        [:> MantineProvider {:theme theme :defaultColorScheme "auto"}
+         [:div {:style {:margin "0 auto"
+                        :max-width "400px"
+                        :min-height "100vh"
+                        :padding "18px"}}
           [:> Center
            [:> Title {:order 2}
             (str "填写" (case role "member" "会员" "merchant" "商家" "") "信息")]]
@@ -126,7 +127,6 @@
                   :onChange #(swap! form assoc :role %1)}])
               [:> TextInput
                {:label       "管理员昵称"
-                :placeholder "请输入"
                 :value       admin-nickname
                 :error       (when (contains? errors :admin-nickname) "请输入有效的管理员昵称")
                 :disabled    submitting?
@@ -134,7 +134,6 @@
                 :required    true}]
               [:> TextInput
                {:label       "姓名"
-                :placeholder "请输入"
                 :value       name
                 :error       (when (contains? errors :name) "请输入有效的姓名")
                 :disabled    submitting?
@@ -142,7 +141,6 @@
                 :required    true}]
               [:> TextInput
                {:label       "手机号"
-                :placeholder "请输入"
                 :value       phone
                 :error       (when (contains? errors :phone) "请输入有效的手机号")
                 :disabled    submitting?
@@ -150,15 +148,14 @@
                 :required    true}]
               [:> TextInput
                {:label       "微信号"
-                :placeholder "请输入"
                 :value       weixin
+                :description "此项不填写，则默认为手机号"
                 :error       (when (contains? errors :weixin) "请输入有效的微信号")
                 :disabled    submitting?
                 :onChange    #(swap! form assoc :weixin (.. % -target -value) :error nil)
-                :required    true}]
+                :required    false}]
               [:> TextInput
                {:label       "QQ号"
-                :placeholder "请输入"
                 :value       qq
                 :error       (when (contains? errors :qq) "请输入有效的QQ号")
                 :disabled    submitting?
@@ -167,7 +164,6 @@
               (when (= role "merchant")
                 [:> TextInput
                  {:label       "店铺链接"
-                  :placeholder "请输入"
                   :value       shop-url
                   :error       (when (contains? errors :shop-url) "请输入有效的店铺链接")
                   :disabled    submitting?
@@ -177,7 +173,6 @@
                 [:<>
                  [:> TextInput
                   {:label       "身份证号"
-                   :placeholder "请输入"
                    :value       idcard
                    :error       (when (contains? errors :idcard) "请输入有效的身份证")
                    :disabled    submitting?

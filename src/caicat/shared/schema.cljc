@@ -12,7 +12,7 @@
    [:name           [:string {:min 2}]]
    [:phone          [:re #"^1[3-9]\d{9}$"]]
    [:weixin         [:string {:min 6 :max 11}]]
-   [:qq             [:string {:min 6}]]])
+   [:qq             [:string {:min 5}]]])
 
 (def Member
   (malli.util/merge 

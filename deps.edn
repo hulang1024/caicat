@@ -10,8 +10,6 @@
   cheshire/cheshire {:mvn/version "6.2.0"}
   hiccup/hiccup {:mvn/version "2.0.0"}
   reagent/reagent {:mvn/version "2.0.1"}
-  reagent-forms/reagent-forms {:mvn/version "0.5.44"}
-  json-html/json-html {:mvn/version "0.4.7"}
   cljs-ajax/cljs-ajax {:mvn/version "0.8.1"}}
  :aliases
  {:build {:main-opts  ["-m" "caicat.webui.build"]
